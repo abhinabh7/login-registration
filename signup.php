@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $showAlert = true;
       }
     } else {
-      $showError = "Passwords do not match";
+      $showError = "Passwords do not match. Please try again.";
     }
   }
 }

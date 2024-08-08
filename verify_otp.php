@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 
-    <title>Login</title>
+    <title>Verify OTP</title>
   </head>
   <body>
     <?php require 'partials/_nav.php' ?>
@@ -61,11 +61,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     ?>
     <div class="container">
-        <h1 class="text-center">verify OTP </h1>
-        <form action="/test/verify_otp.php" method="post">
+        <h1 class="text-center">Verify OTP </h1>
+        <form action="/test/password.php" method="post" style="display: flex; align-items: center; flex-direction: column;">
             <div class="mb-3  col-md-4">
                 <label for="otp"     class="form-label">OTP</label>
-                <input type="text" class="form-control" id="otp" name="otp" required>
+                <input type="text" class="form-control" id="otp" name="otp" placeholder="OTP" >
             </div>
             
             <button type="submit" class="btn btn-primary col-md-4">Verify OTP</button>
