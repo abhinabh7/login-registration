@@ -22,8 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       $hash = password_hash($password, PASSWORD_DEFAULT);
 
       // Insert new user
-      $stmt = $conn->prepare("INSERT INTO `users` (`username`, `email`, `password`, `dt`) VALUES (?, ?, ?, current_timestamp())");
-      $stmt->bind_param("sss", $username, $email, $hash); // Removed the unnecessary fourth parameter
+      $stmt = $conn->prepare("INSERT INTO users (username,email, password) VALUES (?,?, ?)");
+
+      $stmt->bind_param("sss",$username, $email, $hash, ); // Removed the unnecessary fourth parameter
       $stmt->execute();
 
       // Check if the user was inserted successfully

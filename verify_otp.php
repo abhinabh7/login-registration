@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     ?>
     <div class="container">
         <h1 class="text-center">Verify OTP </h1>
-        <form action="/test/password.php" method="post" style="display: flex; align-items: center; flex-direction: column;">
+        <form action="" method="post" style="display: flex; align-items: center; flex-direction: column;">
             <div class="mb-3  col-md-4">
                 <label for="otp"     class="form-label">OTP</label>
                 <input type="text" class="form-control" id="otp" name="otp" placeholder="OTP" >
