@@ -65,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
   ?>
   <div class="container">
-    <form action="/test/signup.php" method="post" style="display: flex; align-items: center; flex-direction: column;">
+    <form action="/test/index.php" method="post" style="display: flex; align-items: center; flex-direction: column;">
       <h2 class="text-center mb-4"> SignUp</h2>
 
       <div class="mb-3 col-md-4">

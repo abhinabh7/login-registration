@@ -13,7 +13,7 @@ echo '<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/test/welcome.php">Home</a>
+          <a class="nav-link active" aria-current="page" href="/test/index.php">Home</a>
         </li>';
 
 if (!$loggedin) {
@@ -22,7 +22,7 @@ if (!$loggedin) {
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="/test/signup.php">Signup</a>
+          <a class="nav-link" href="/test/index.php">Signup</a>
         </li>';
 }
 if ($loggedin) {
