@@ -1,72 +1,78 @@
 <?php 
-$login =false;
+session_start();
+$login = false;
 $showError = false;
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-  include 'partials/_dbconnect.php';
-  $username = $_POST["username"];
-  $password = $_POST["password"];
- 
-  // $sql = "SELECT * FROM users WHERE username='$username' AND password='$password'";
-  $sql = "SELECT * FROM users WHERE username='$username'";
-  $result = mysqli_query($conn, $sql);
-  $num = mysqli_num_rows($result);
-    if ($num == 1){
-      while($row=mysqli_fetch_assoc($result)){
-        if(password_verify($password, $row['password'])){
-        $login = true;
-        session_start();
-        $_SESSION['loggedin']= true;
-        $_SESSION['username']=$username;
-        header("location: welcome.php");
-          
-        } else{
-          $showError ="Invalid Credentials";
+
+include 'partials/_dbconnect.php';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $password = $_POST["password"];
+
+    $sql = "SELECT * FROM users";
+    $result = mysqli_query($conn, $sql);
+    $num = mysqli_num_rows($result);
+
+    if ($num > 0) {
+        $passwordMatched = false; // Track if any password matches
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            if (password_verify($password, $row['password'])) {
+                $passwordMatched = true;
+                $login = true;
+                $_SESSION['loggedin'] = true;
+                $_SESSION['username'] = $row['username'];
+                header("location: welcome.php");
+                exit;
+            }
         }
-      }
 
-        
+        if (!$passwordMatched) {
+            $showError = "Invalid password. Please try again.";
+        }
+    } else {
+        $showError = "No users found.";
     }
-  
-  else{
-    $showError ="Invalid Credentials";
-  }
-
-
 }
-
 ?>
+
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <title>Login</title>
-  </head>
-  <body>
-    <?php require 'partials/_nav.php' ?>
+</head>
+<body>
+    <?php require 'partials/_nav.php'; ?>
+
     <?php
-    if($login){
-    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-          <strong>Success!</strong> You are logged in.
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div> ';
+    if (isset($_SESSION['otp_verified']) && $_SESSION['otp_verified']) {
+        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> Your OTP has been verified. Logging in...
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+        unset($_SESSION['otp_verified']);
     }
-    if($showError){
-      echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>Error!</strong>'. $showError.' 
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div> ';
-      }
+
+    if ($login) {
+        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>Success!</strong> You are logged in.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+    }
+
+    if ($showError) {
+        echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error!</strong> ' . $showError . '
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>';
+    }
     ?>
+
     <div class="container">
-        <h1 class="text-center">Please Login </h1>
-        <form action="/test/login.php" method="post">
-            <div class="mb-3  col-md-4">
-                <label for="username"     class="form-label">Username</label>
-                <input type="text " class="form-control" id="username" name="username" aria-describedby="emailHelp">
-            </div>
+        <h2 class="text-center">Password Login</h2>
+        <form action="" method="post" style="display: flex; align-items: center; flex-direction: column;">
             <div class="mb-3 col-md-4">
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
@@ -75,7 +81,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         </form>
     </div>
 
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>

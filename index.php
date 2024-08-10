@@ -1,42 +1,47 @@
 <?php
+session_start();
 $showAlert = false;
 $showError = false;
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  include 'partials/_dbconnect.php'; // Ensure _dbconnect.php establishes a $conn variable
+    include 'partials/_dbconnect.php';
 
-  $username = $_POST["username"];
-  $password = $_POST["password"];
-  $cpassword = $_POST["cpassword"];
-  $email = $_POST["email"];
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+    $cpassword = $_POST["cpassword"];
+    $email = $_POST["email"];
 
-  // Check if email already exists
-  $stmt = $conn->prepare("SELECT * FROM `users` WHERE email=?");
-  $stmt->bind_param("s", $email);
-  $stmt->execute();
-  $result = $stmt->get_result();
-  $numExistRows = $result->num_rows;
-  if ($numExistRows > 0) {
-    $showError = "Email Already Exists";
-  } else {
-    if ($password == $cpassword) { // Simplified condition
-      $hash = password_hash($password, PASSWORD_DEFAULT);
+    // Check if email already exists
+    $stmt = $conn->prepare("SELECT * FROM `users` WHERE email=?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $numExistRows = $result->num_rows;
 
-      // Insert new user
-      $stmt = $conn->prepare("INSERT INTO users (username,email, password) VALUES (?,?, ?)");
-
-      $stmt->bind_param("sss",$username, $email, $hash, ); // Removed the unnecessary fourth parameter
-      $stmt->execute();
-
-      // Check if the user was inserted successfully
-      if ($stmt->affected_rows > 0) {
-        $showAlert = true;
-      }
+    if ($numExistRows > 0) {
+        $showError = "Email Already Exists";
     } else {
-      $showError = "Passwords do not match. Please try again.";
+        if ($password == $cpassword) {
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+
+            // Insert new user
+            $stmt = $conn->prepare("INSERT INTO users (username,email, password) VALUES (?,?,?)");
+            $stmt->bind_param("sss", $username, $email, $hash);
+            $stmt->execute();
+
+            // Check if the user was inserted successfully
+            if ($stmt->affected_rows > 0) {
+                $_SESSION['signup_success'] = "Your account is now created and you can login.";
+                header("Location: login.php"); // Redirect to the login page
+                exit();
+            }
+        } else {
+            $showError = "Passwords do not match. Please try again.";
+        }
     }
-  }
 }
 ?>
+
 
 <!doctype html>
 <html lang="en">
